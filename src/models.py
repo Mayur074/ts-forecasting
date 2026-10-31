@@ -4,7 +4,7 @@ src/models.py
 Time series forecasting models:
   - Baseline: Moving Average, ARIMA (via statsmodels)
   - ML: XGBoost, LightGBM with walk-forward validation
-  - Evaluation: MAE, RMSE, MAPE, Directional Accuracy
+  - Evaluation: MAE, RMSE, MASE, Directional Accuracy
 """
 
 from __future__ import annotations
@@ -25,10 +25,13 @@ logger = logging.getLogger(__name__)
 # ── Metrics ───────────────────────────────────────────────────────────────────
 
 def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    """Compute MAE, RMSE, MAPE, and Directional Accuracy."""
+    """Compute MAE, RMSE, MASE, and Directional Accuracy."""
     mae  = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-    mape = np.mean(np.abs((y_true - y_pred) / (np.abs(y_true) + 1e-8))) * 100
+    # MASE instead of MAPE: daily returns sit near zero, so MAPE divides by ~0 and explodes.
+    # MASE < 1 means the model beats a naive "repeat yesterday's return" forecast.
+    naive_mae = np.mean(np.abs(np.diff(y_true))) if len(y_true) > 1 else np.nan
+    mase = mae / naive_mae if naive_mae and naive_mae > 0 else np.nan
 
     # Directional accuracy: did we predict the right direction?
     dir_acc = np.mean(np.sign(y_true) == np.sign(y_pred)) * 100
@@ -36,7 +39,7 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
     return {
         "mae":               round(float(mae), 6),
         "rmse":              round(float(rmse), 6),
-        "mape":              round(float(mape), 4),
+        "mase":              round(float(mase), 4),
         "directional_acc":   round(float(dir_acc), 2),
     }
 
