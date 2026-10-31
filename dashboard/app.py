@@ -88,6 +88,7 @@ if run_btn:
         "XGBoost":        XGBoostForecaster(),
         "LightGBM":       LightGBMForecaster(),
         "MovingAverage":  MovingAverageBaseline(window=5),
+        "ARIMA":          ARIMABaseline(order=(1, 0, 1)),
     }
 
     all_metrics = []
@@ -105,8 +106,8 @@ if run_btn:
     if all_metrics:
         metrics_df = pd.DataFrame(all_metrics).set_index("model")
         st.dataframe(
-            metrics_df[["mae", "rmse", "mape", "directional_acc"]]
-            .style.highlight_min(axis=0, subset=["mae", "rmse", "mape"])
+            metrics_df[["mae", "rmse", "mase", "directional_acc"]]
+            .style.highlight_min(axis=0, subset=["mae", "rmse", "mase"])
             .highlight_max(axis=0, subset=["directional_acc"]),
             use_container_width=True,
         )

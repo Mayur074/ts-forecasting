@@ -6,7 +6,7 @@ End-to-end **time series forecasting pipeline** comparing ML models (XGBoost, Li
 ![XGBoost](https://img.shields.io/badge/XGBoost-2.1-orange)
 ![LightGBM](https://img.shields.io/badge/LightGBM-4.5-green)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.38-red)
-![CI](https://github.com/yourgithub/ts-forecasting/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Mayur074/ts-forecasting/actions/workflows/ci.yml/badge.svg)
 
 ---
 
@@ -34,7 +34,7 @@ Model Training & Comparison
 Walk-Forward Validation (5 folds, expanding window)
         │
         ▼
-Evaluation: MAE · RMSE · MAPE · Directional Accuracy
+Evaluation: MAE · RMSE · MASE · Directional Accuracy
         │
         ▼
 Streamlit Dashboard
@@ -48,7 +48,7 @@ Streamlit Dashboard
 ## Quickstart
 
 ```bash
-git clone https://github.com/yourgithub/ts-forecasting.git
+git clone https://github.com/Mayur074/ts-forecasting.git
 cd ts-forecasting
 pip install -r requirements.txt
 
@@ -63,7 +63,7 @@ Select a ticker (AAPL, MSFT, GOOGL, AMZN, TSLA), click **Run Forecast**.
 |--------|-------------|
 | MAE | Mean Absolute Error on daily returns |
 | RMSE | Root Mean Squared Error |
-| MAPE | Mean Absolute Percentage Error |
+| MASE | Mean Absolute Scaled Error (below 1 beats a naive forecast) |
 | Directional Accuracy | % of correct up/down predictions |
 
 ## Project Structure
@@ -76,7 +76,7 @@ ts-forecasting/
 ├── dashboard/
 │   └── app.py           # Interactive Streamlit dashboard
 ├── tests/
-│   └── test_forecasting.py  # 32 self-contained unit tests
+│   └── test_forecasting.py  # 22 self-contained unit tests
 └── requirements.txt
 ```
 
